@@ -1,6 +1,6 @@
 <template>
   <v-container style="max-width: 1000px">
-    <v-btn text class="mb-2" href="/">
+    <v-btn text class="mb-2" :to="{ path: '/' }">
       <v-icon left>
         mdi-arrow-left
       </v-icon>
