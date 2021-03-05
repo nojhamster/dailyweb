@@ -22,14 +22,16 @@
             >
               <v-list-item-avatar>
                 <v-avatar v-if="speaker.isDone" size="32" color="primary">
-                  <v-icon>mdi-check</v-icon>
+                  <v-icon dark>
+                    mdi-check
+                  </v-icon>
                 </v-avatar>
                 <v-avatar v-else-if="turn === index + 1" size="32" color="primary">
-                  <v-icon small>
+                  <v-icon small dark>
                     mdi-account-voice
                   </v-icon>
                 </v-avatar>
-                <v-avatar v-else size="32" color="grey">
+                <v-avatar v-else size="32" color="grey white--text">
                   {{ index + 1 }}
                 </v-avatar>
               </v-list-item-avatar>
