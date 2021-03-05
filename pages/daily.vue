@@ -89,7 +89,7 @@
                   </v-layout>
 
                   <v-btn outlined color="primary" class="mt-4" @click="setSpeakerAsDone">
-                    J'ai fini
+                    Fin du tour
                   </v-btn>
                 </v-layout>
               </v-card>
