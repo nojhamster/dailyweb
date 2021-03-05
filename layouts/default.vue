@@ -7,6 +7,36 @@
 
       <v-spacer />
 
+      <v-dialog v-model="showShortcuts" width="300">
+        <template #activator="{ on, attrs }">
+          <v-btn
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-apple-keyboard-command</v-icon>
+          </v-btn>
+        </template>
+
+        <v-card>
+          <v-card-title>
+            Raccourcis
+            <v-spacer />
+            <v-icon>mdi-apple-keyboard-command</v-icon>
+          </v-card-title>
+          <v-list>
+            <v-list-item v-for="shortcut in shortcuts" :key="shortcut.label">
+              <v-list-item-title>
+                {{ shortcut.label }}
+              </v-list-item-title>
+              <v-list-item-avatar>
+                <code class="pa-1">{{ shortcut.key }}</code>
+              </v-list-item-avatar>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-dialog>
+
       <v-btn icon @click="toggleDarkMode">
         <v-icon>{{ themeIcon }}</v-icon>
       </v-btn>
@@ -22,6 +52,17 @@
 
 <script>
 export default {
+  data () {
+    return {
+      showShortcuts: false,
+      shortcuts: [
+        { label: 'Participant suivant', key: '→' },
+        { label: 'Participant précédent', key: '←' },
+        { label: 'Fin du tour', key: 'T' },
+        { label: 'Pause/Reprise', key: 'P' }
+      ]
+    }
+  },
   computed: {
     themeIcon () {
       return this.$vuetify.theme.dark ? 'mdi-lightbulb-on-outline' : 'mdi-lightbulb-off-outline'
