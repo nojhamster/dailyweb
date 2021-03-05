@@ -121,6 +121,7 @@
         <v-btn
           large
           color="primary"
+          :disabled="!hasParticipants"
           @click="start"
         >
           <v-icon left>
@@ -163,6 +164,11 @@ export default {
       trelloBoardId: settings?.trelloBoardId || '',
       trelloApiKey: settings?.trelloApiKey || '',
       trelloAccessToken: settings?.trelloAccessToken || ''
+    }
+  },
+  computed: {
+    hasParticipants () {
+      return this.participants.length > 0
     }
   },
   methods: {
