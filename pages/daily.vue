@@ -46,22 +46,24 @@
               :key="speaker.name"
               :step="index + 1"
             >
-              <v-card class="pa-12">
-                <v-layout column fill-height align-center justify-center>
-                  <div class="text-h2">
-                    {{ speaker.name }}
-                  </div>
+              <v-card class="pa-12 text-center">
+                <div class="text-h2">
+                  {{ speaker.name }}
+                </div>
 
-                  <Timer
-                    :used-time="speaker.totalSpeakTime"
-                    :available-time="secondsPerPerson"
-                  />
+                <Timer
+                  :used-time="speaker.totalSpeakTime"
+                  :available-time="secondsPerPerson"
+                />
 
-                  <v-layout align-center>
+                <v-row align="center" justify="center">
+                  <v-col class="shrink">
                     <v-btn x-large icon color="primary" :disabled="turn <= 1" @click="setTurn(turn - 1)">
                       <v-icon>mdi-arrow-left</v-icon>
                     </v-btn>
+                  </v-col>
 
+                  <v-col class="shrink">
                     <v-btn
                       v-if="isPlaying"
                       large
@@ -82,34 +84,34 @@
                     >
                       <v-icon>mdi-play</v-icon>
                     </v-btn>
+                  </v-col>
 
+                  <v-col class="shrink">
                     <v-btn x-large icon color="primary" :disabled="!dailyIsOver && turn >= participants.length" @click="setTurn(turn + 1)">
                       <v-icon>mdi-arrow-right</v-icon>
                     </v-btn>
-                  </v-layout>
+                  </v-col>
+                </v-row>
 
-                  <v-btn outlined color="primary" class="mt-4" @click="setSpeakerAsDone">
-                    Fin du tour
-                  </v-btn>
-                </v-layout>
+                <v-btn outlined color="primary" class="mt-4" @click="setSpeakerAsDone">
+                  Fin du tour
+                </v-btn>
               </v-card>
             </v-stepper-content>
 
             <v-stepper-content :step="participants.length + 1">
-              <v-card class="pa-12">
-                <v-layout column fill-height align-center justify-center>
-                  <div class="text-h2 mt-6">
-                    Daily
-                  </div>
+              <v-card class="py-15 text-center">
+                <div class="text-h2">
+                  Daily
+                </div>
 
-                  <v-icon size="64" class="my-6">
-                    mdi-check-circle-outline
-                  </v-icon>
+                <v-icon size="64" class="my-6">
+                  mdi-check-circle-outline
+                </v-icon>
 
-                  <div class="text-h2 mb-6">
-                    terminé
-                  </div>
-                </v-layout>
+                <div class="text-h2">
+                  terminé
+                </div>
               </v-card>
             </v-stepper-content>
           </v-stepper-items>
