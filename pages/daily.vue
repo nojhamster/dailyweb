@@ -208,6 +208,9 @@ export default {
   },
   destroyed () {
     window.removeEventListener('keydown', this.handleKeypress)
+    if (this.intervalId) {
+      clearInterval(this.intervalId)
+    }
   },
   methods: {
     start () {
