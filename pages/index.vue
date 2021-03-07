@@ -190,7 +190,7 @@ export default {
     },
     playDing () {
       if (this.dingFile && this.dingVolume > 0) {
-        const ding = new Audio(`/${this.dingFile}.mp3`)
+        const ding = new Audio(`${this.$router.options.base}${this.dingFile}.mp3`)
         ding.volume = this.dingVolume / 100
         ding.play()
       }
