@@ -34,6 +34,7 @@
               :key="label.id"
               :color="label.color"
               label
+              dark
               class="mr-1 my-1"
             >
               {{ label.name }}

@@ -14,6 +14,7 @@
         :color="label.color"
         small
         label
+        dark
         class="mr-1 my-1"
       >
         {{ label.name }}

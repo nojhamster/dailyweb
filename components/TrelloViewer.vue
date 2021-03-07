@@ -30,7 +30,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="12" md="4">
-          <v-select
+          <v-autocomplete
             v-model="selectedLists"
             :items="lists"
             item-text="name"
@@ -39,11 +39,12 @@
             hide-details
             outlined
             multiple
+            clearable
           />
         </v-col>
 
         <v-col cols="12" md="4">
-          <v-select
+          <v-autocomplete
             v-model="selectedMembers"
             :items="members"
             item-text="fullName"
@@ -52,11 +53,26 @@
             hide-details
             outlined
             multiple
-          />
+            clearable
+          >
+            <template #selection="data">
+              <TrelloAvatar :member="data.item" class="mr-1" />
+            </template>
+
+            <template #item="data">
+              <v-list-item-avatar>
+                <TrelloAvatar :member="data.item" />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title v-text="data.item.fullName" />
+                <v-list-item-subtitle v-text="data.item.username" />
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
         </v-col>
 
         <v-col cols="12" md="4">
-          <v-select
+          <v-autocomplete
             v-model="selectedLabels"
             :items="labels"
             item-text="name"
@@ -65,7 +81,19 @@
             hide-details
             outlined
             multiple
-          />
+            clearable
+          >
+            <template #selection="data">
+              <v-chip
+                :color="data.item.color"
+                label
+                class="mr-1 my-1"
+                dark
+              >
+                {{ data.item.name }}
+              </v-chip>
+            </template>
+          </v-autocomplete>
         </v-col>
       </v-row>
     </v-card-text>
@@ -113,11 +141,13 @@
 <script>
 import TrelloCardDialog from '~/components/TrelloCardDialog'
 import TrelloCard from '~/components/TrelloCard'
+import TrelloAvatar from '~/components/TrelloAvatar'
 
 export default {
   components: {
     TrelloCardDialog,
-    TrelloCard
+    TrelloCard,
+    TrelloAvatar
   },
   props: {
     boardId: {
