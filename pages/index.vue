@@ -103,17 +103,21 @@
         />
         <v-text-field
           v-model="trelloApiKey"
-          type="password"
+          :type="showApiKey ? 'text' : 'password'"
           outlined
           name="trelloApiKey"
           label="Clé d'API"
+          :append-icon="showApiKey ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="showApiKey = !showApiKey"
         />
         <v-text-field
           v-model="trelloAccessToken"
-          type="password"
+          :type="showAccessToken ? 'text' : 'password'"
           outlined
           name="trelloAccessToken"
           label="Token d'accès"
+          :append-icon="showAccessToken ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="showAccessToken = !showAccessToken"
         />
       </v-card-text>
 
@@ -150,6 +154,8 @@ export default {
     if (dingVolume < 0) { dingVolume = 0 }
 
     return {
+      showApiKey: false,
+      showAccessToken: false,
       name: '',
       dingFiles: [
         'ding_01',
