@@ -143,7 +143,7 @@ export default {
     Timer,
     TrelloViewer
   },
-  asyncData ({ redirect, router }) {
+  asyncData ({ redirect, app }) {
     let settings
     try {
       settings = JSON.parse(localStorage.getItem('settings'))
@@ -175,7 +175,8 @@ export default {
     let ding = null
 
     if (dingFile && Number.isInteger(dingVolume) && dingVolume > 0) {
-      ding = new Audio(`${router.options.base}${dingFile}.mp3`)
+      const baseUrl = app.router?.options?.base || ''
+      ding = new Audio(`${baseUrl}${dingFile}.mp3`)
       ding.volume = Math.min(100, dingVolume / 100)
     }
 
