@@ -27,6 +27,49 @@
       </v-btn>
     </v-toolbar>
 
+    <v-card-text>
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-select
+            v-model="selectedLists"
+            :items="lists"
+            item-text="name"
+            item-value="id"
+            label="Listes"
+            hide-details
+            outlined
+            multiple
+          />
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <v-select
+            v-model="selectedMembers"
+            :items="members"
+            item-text="fullName"
+            item-value="id"
+            label="Membres"
+            hide-details
+            outlined
+            multiple
+          />
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <v-select
+            v-model="selectedLabels"
+            :items="labels"
+            item-text="name"
+            item-value="id"
+            label="Étiquettes"
+            hide-details
+            outlined
+            multiple
+          />
+        </v-col>
+      </v-row>
+    </v-card-text>
+
     <v-card-title>
       Activité
     </v-card-title>
@@ -47,15 +90,35 @@
           :key="card.id"
           small
         >
-          <a :href="card.url" target="_blank">{{ card.name }}</a>
+          <TrelloCard
+            :card="card"
+            :lists="lists"
+            :members="members"
+            :labels="labels"
+            @showDetails="showCard(card)"
+          />
         </v-timeline-item>
       </v-timeline>
     </v-card-text>
+
+    <TrelloCardDialog
+      ref="cardViewer"
+      :lists="lists"
+      :members="members"
+      :labels="labels"
+    />
   </v-card>
 </template>
 
 <script>
+import TrelloCardDialog from '~/components/TrelloCardDialog'
+import TrelloCard from '~/components/TrelloCard'
+
 export default {
+  components: {
+    TrelloCardDialog,
+    TrelloCard
+  },
   props: {
     boardId: {
       type: String,
@@ -75,20 +138,52 @@ export default {
       search: '',
       board: null,
       loading: false,
-      error: null
+      error: null,
+      selectedMembers: [],
+      selectedLists: [],
+      selectedLabels: []
     }
   },
   computed: {
     boardName () { return this.board?.name },
     hasError () { return !!this.error },
     errorMessage () { return this.error?.message },
+    lists () { return Array.isArray(this.board?.lists) ? this.board.lists : [] },
+    labels () { return Array.isArray(this.board?.labels) ? this.board.labels : [] },
+    members () { return Array.isArray(this.board?.members) ? this.board.members : [] },
     cards () {
       const cards = Array.isArray(this.board?.cards) ? this.board.cards : []
       const search = this.search.toLowerCase()
 
       return cards
         .sort((a, b) => a.dateLastActivity < b.dateLastActivity ? 1 : -1)
-        .filter(card => search ? card.name.toLowerCase().includes(search) : true)
+        .filter((card) => {
+          if (search && !card.name.toLowerCase().includes(search)) {
+            return false
+          }
+
+          if (this.selectedLists.length > 0 && !this.selectedLists.includes(card.idList)) {
+            return false
+          }
+          if (this.selectedMembers.length > 0) {
+            if (!Array.isArray(card.idMembers)) {
+              return false
+            }
+            if (!this.selectedMembers.some(idMember => card.idMembers.includes(idMember))) {
+              return false
+            }
+          }
+          if (this.selectedLabels.length > 0) {
+            if (!Array.isArray(card.idLabels)) {
+              return false
+            }
+            if (!this.selectedLabels.some(idLabel => card.idLabels.includes(idLabel))) {
+              return false
+            }
+          }
+
+          return true
+        })
         .slice(0, 25)
     }
   },
@@ -98,6 +193,9 @@ export default {
     }
   },
   methods: {
+    showCard (item) {
+      this.$refs.cardViewer.showCard(item)
+    },
     async fetchCards () {
       this.loading = true
       this.error = null
@@ -113,7 +211,13 @@ export default {
           headers,
           params: {
             cards: 'visible',
-            card_fields: 'name,desc,url,dateLastActivity'
+            lists: 'open',
+            members: 'all',
+            labels: 'all',
+            label_fields: 'name,color',
+            member_fields: 'username,avatarUrl,fullName,initials',
+            card_fields: 'name,desc,url,dateLastActivity,idList,idMembers,idLabels',
+            list_fields: 'name'
           }
         })
         this.board = response.data
