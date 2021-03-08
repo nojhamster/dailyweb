@@ -15,34 +15,98 @@
           </v-card-title>
 
           <v-list min-width="200">
-            <v-list-item
-              v-for="(speaker, index) in participants"
-              :key="speaker.name"
-              @click="setTurn(index + 1)"
-            >
-              <v-list-item-avatar>
-                <v-avatar v-if="speaker.isDone" size="32" color="primary">
-                  <v-icon dark>
-                    mdi-check
-                  </v-icon>
-                </v-avatar>
-                <v-avatar v-else-if="turn === index + 1" size="32" color="primary">
-                  <v-icon small dark>
-                    mdi-account-voice
-                  </v-icon>
-                </v-avatar>
-                <v-avatar v-else size="32" color="grey white--text">
-                  {{ index + 1 }}
-                </v-avatar>
-              </v-list-item-avatar>
-              <v-list-item-title>{{ speaker.name }}</v-list-item-title>
-            </v-list-item>
+            <v-scale-transition group>
+              <v-list-item
+                v-for="(speaker, index) in participants"
+                :key="speaker.name"
+                @click="setTurn(index + 1)"
+              >
+                <v-list-item-avatar>
+                  <v-avatar v-if="speaker.isDone" size="32" color="primary">
+                    <v-icon dark>
+                      mdi-check
+                    </v-icon>
+                  </v-avatar>
+                  <v-avatar v-else-if="turn === index + 1" size="32" color="primary">
+                    <v-icon small dark>
+                      mdi-account-voice
+                    </v-icon>
+                  </v-avatar>
+                  <v-avatar v-else size="32" color="grey white--text">
+                    {{ index + 1 }}
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-title>{{ speaker.name }}</v-list-item-title>
+              </v-list-item>
+            </v-scale-transition>
           </v-list>
         </v-card>
       </v-col>
       <v-col>
         <v-stepper v-model="turn">
           <v-stepper-items>
+            <!-- Speakers shuffle -->
+            <v-stepper-content :step="0">
+              <v-scroll-y-transition mode="out-in" appear>
+                <v-card v-if="!selectionIsOver" key="beforeShuffle" class="py-15 text-center">
+                  <div class="headline">
+                    Avant tout, décidons d'un ordre.
+                  </div>
+
+                  <v-btn
+                    class="my-4"
+                    color="primary"
+                    :loading="randomizing"
+                    @click="randomize"
+                  >
+                    <v-icon left>
+                      mdi-shuffle
+                    </v-icon>
+                    Tirer au sort
+                  </v-btn>
+
+                  <div>
+                    <v-scale-transition group>
+                      <v-chip
+                        v-for="name in names"
+                        :key="name"
+                        label
+                        class="ma-1"
+                        @click="addSpeaker(name)"
+                      >
+                        {{ name }}
+                      </v-chip>
+                    </v-scale-transition>
+                  </div>
+                </v-card>
+
+                <v-card v-else key="afterShuffle" class="py-15 text-center">
+                  <div class="text-h2">
+                    Les jeux sont faits !
+                  </div>
+
+                  <div class="mt-6 headline">
+                    <strong>{{ firstSpeaker.name }}</strong> {{ leadExpression }}
+                  </div>
+
+                  <div class="mt-6">
+                    <v-btn x-large color="primary" @click="setTurn(1)">
+                      <v-icon left>
+                        mdi-flag-checkered
+                      </v-icon>
+                      C'est parti !
+                    </v-btn>
+                  </div>
+                  <div class="mt-6">
+                    <v-btn outlined color="primary" @click="resetSpeakers">
+                      Refaire le tirage
+                    </v-btn>
+                  </div>
+                </v-card>
+              </v-scroll-y-transition>
+            </v-stepper-content>
+
+            <!-- Speakers -->
             <v-stepper-content
               v-for="(speaker, index) in participants"
               :key="speaker.name"
@@ -96,11 +160,12 @@
                 </v-row>
 
                 <v-btn outlined color="primary" class="mt-4" @click="setSpeakerAsDone">
-                  Fin du tour
+                  J'ai fini
                 </v-btn>
               </v-card>
             </v-stepper-content>
 
+            <!-- Daily end -->
             <v-stepper-content :step="participants.length + 1">
               <v-card class="py-15 text-center">
                 <div class="text-h2">
@@ -138,6 +203,21 @@
 import Timer from '~/components/Timer'
 import TrelloViewer from '~/components/TrelloViewer'
 
+const leadExpressions = [
+  'prend le lead',
+  'démarre en tête',
+  'est en pôle position',
+  'prend l\'initiative',
+  'mène la danse',
+  'prend les devants',
+  'ouvre le bal',
+  'se lance',
+  'lance les hostilités',
+  'a l\'avantage',
+  'a la parole',
+  'fait le premier pas'
+]
+
 export default {
   components: {
     Timer,
@@ -155,18 +235,9 @@ export default {
       return redirect({ name: 'index' })
     }
 
-    const participants = settings?.participants
-      .map(p => ({
-        name: p && p.trim(),
-        previousSpeakTime: 0,
-        totalSpeakTime: 0,
-        isDone: false,
-        timeExceeded: false
-      }))
-      .filter(p => p.name)
-      .sort(() => (Math.random() - 0.5))
+    const names = settings?.participants.map(name => name.trim()).filter(name => name)
 
-    if (participants.length === 0) {
+    if (names.length === 0) {
       return redirect({ name: 'index' })
     }
 
@@ -181,9 +252,12 @@ export default {
     }
 
     return {
-      turn: 1,
+      randomizing: false,
+      turn: 0,
       ding,
-      participants,
+      names,
+      participants: [],
+      leadExpression: leadExpressions[0],
       startTime: new Date(),
       secondsPerPerson: settings.secondsPerPerson,
       intervalId: null,
@@ -193,6 +267,9 @@ export default {
     }
   },
   computed: {
+    firstSpeaker () {
+      return this.participants[0]
+    },
     currentSpeaker () {
       return this.participants[this.turn - 1]
     },
@@ -201,6 +278,16 @@ export default {
     },
     dailyIsOver () {
       return this.participants.every(p => p.isDone)
+    },
+    selectionIsOver () {
+      return this.names.length === 0
+    }
+  },
+  watch: {
+    selectionIsOver (newVal) {
+      if (newVal) {
+        this.leadExpression = leadExpressions[Math.floor(Math.random() * leadExpressions.length)]
+      }
     }
   },
   beforeMount () {
@@ -213,6 +300,31 @@ export default {
     }
   },
   methods: {
+    async randomize () {
+      this.randomizing = true
+
+      while (this.names.length > 0) {
+        const randomName = this.names[Math.floor(Math.random() * this.names.length)]
+        this.addSpeaker(randomName)
+        await new Promise((resolve) => { setTimeout(resolve, 300) })
+      }
+
+      this.randomizing = false
+    },
+    addSpeaker (name) {
+      this.names = this.names.filter(n => n !== name)
+      this.participants.push({
+        name,
+        previousSpeakTime: 0,
+        totalSpeakTime: 0,
+        isDone: false,
+        timeExceeded: false
+      })
+    },
+    resetSpeakers () {
+      this.names = this.participants.map(p => p.name)
+      this.participants = []
+    },
     start () {
       if (this.dailyIsOver) { return }
       const speaker = this.currentSpeaker
@@ -244,6 +356,7 @@ export default {
       }
     },
     setTurn (n) {
+      if (!this.selectionIsOver) { return }
       if (n < 1) { n = 1 }
       if (n > this.participants.length) {
         n = this.participants.length + (this.dailyIsOver ? 1 : 0)
@@ -273,6 +386,7 @@ export default {
       this.nextSpeaker()
     },
     handleKeypress (event) {
+      if (!this.selectionIsOver) { return }
       if (event.key === 'ArrowLeft') { this.prevTurn() }
       if (event.key === 'ArrowRight') { this.nextTurn() }
       if (event.key === 't') { this.setSpeakerAsDone() }
