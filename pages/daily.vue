@@ -159,9 +159,16 @@
                   </v-col>
                 </v-row>
 
-                <v-btn outlined color="primary" class="mt-4" @click="setSpeakerAsDone">
-                  J'ai fini
+                <v-btn v-if="!speaker.isDone" outlined color="primary" class="mt-4" @click="setSpeakerAsDone">
+                  J'ai fini de parler
                 </v-btn>
+
+                <v-chip v-else color="green" text-color="white" class="mt-4">
+                  <v-icon left>
+                    mdi-check
+                  </v-icon>
+                  Terminé
+                </v-chip>
               </v-card>
             </v-stepper-content>
 
