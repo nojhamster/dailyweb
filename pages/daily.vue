@@ -52,20 +52,11 @@
                   <div class="headline">
                     Avant tout, décidons d'un ordre.
                   </div>
-
-                  <v-btn
-                    class="my-4"
-                    color="primary"
-                    :loading="randomizing"
-                    @click="randomize"
-                  >
-                    <v-icon left>
-                      mdi-shuffle
-                    </v-icon>
-                    Tirer au sort
-                  </v-btn>
-
                   <div>
+                    Sélectionnez les participants par ordre de passage.
+                  </div>
+
+                  <div class="my-6">
                     <v-scale-transition group>
                       <v-chip
                         v-for="name in names"
@@ -78,6 +69,17 @@
                       </v-chip>
                     </v-scale-transition>
                   </div>
+
+                  <v-btn
+                    color="primary"
+                    :loading="randomizing"
+                    @click="randomize"
+                  >
+                    <v-icon left>
+                      mdi-shuffle
+                    </v-icon>
+                    Tirer au sort
+                  </v-btn>
                 </v-card>
 
                 <v-card v-else key="afterShuffle" class="py-15 text-center">
