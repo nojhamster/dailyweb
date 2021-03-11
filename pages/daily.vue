@@ -120,6 +120,7 @@
                 <Timer
                   :used-time="speaker.totalSpeakTime"
                   :available-time="secondsPerPerson"
+                  class="my-8"
                 />
 
                 <v-row align="center" justify="center">
@@ -471,9 +472,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .timer {
-    font-size: 2em;
-  }
-</style>
