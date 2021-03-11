@@ -259,11 +259,11 @@ export default {
       turn: 0,
       ding,
       names,
+      notifiate: false,
       participants: [],
       leadExpression: leadExpressions[0],
       startTime: new Date(),
       secondsPerPerson: settings.secondsPerPerson,
-      intervalId: null,
       trelloBoardId: settings?.trelloBoardId,
       trelloApiKey: settings?.trelloApiKey,
       trelloAccessToken: settings?.trelloAccessToken
@@ -306,6 +306,7 @@ export default {
     }
   },
   mounted () {
+    this.askForNotifications()
     this.initTimeTracker()
   },
   beforeMount () {
@@ -367,6 +368,16 @@ export default {
         if (this.ding) {
           this.ding.play()
         }
+
+        if (this.notifiate) {
+          const notification = new Notification('Ding dong !', {
+            body: `Le temps de ${speaker.name} est écoulé`,
+            icon: '/alarm-light-outline.png',
+            silent: true
+          })
+
+          setTimeout(() => { notification.close() }, 5000)
+        }
       }
     },
     setTurn (n) {
@@ -424,6 +435,17 @@ export default {
             this.updateSpeakTime(secondsElapsed)
           }
         }
+      }
+    },
+    async askForNotifications () {
+      if ('Notification' in window) {
+        let permission = Notification.permission
+
+        if (permission !== 'granted' && permission !== 'denied') {
+          permission = await Notification.requestPermission()
+        }
+
+        this.notifiate = permission === 'granted'
       }
     },
     handleKeypress (event) {
