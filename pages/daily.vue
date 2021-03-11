@@ -266,6 +266,21 @@ export default {
       trelloAccessToken: settings?.trelloAccessToken
     }
   },
+  head () {
+    let title = 'Daily'
+
+    if (!this.selectionIsOver) {
+      title = 'Choix de l\'ordre'
+    } else if (this.dailyIsOver) {
+      title = 'Daily terminé'
+    } else if (this.currentSpeaker) {
+      const time = this.$timeFunctions.formatSeconds(this.currentSpeaker?.totalSpeakTime || 0)
+      const speaker = this.currentSpeaker?.name
+      title = `${time} - ${speaker}`
+    }
+
+    return { title }
+  },
   computed: {
     firstSpeaker () {
       return this.participants[0]
