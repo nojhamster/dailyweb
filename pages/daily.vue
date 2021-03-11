@@ -202,6 +202,7 @@
 <script>
 import Timer from '~/components/Timer'
 import TrelloViewer from '~/components/TrelloViewer'
+import TimeTrackerWorker from '~/assets/time-tracker.worker.js'
 
 const leadExpressions = [
   'prend le lead',
@@ -252,7 +253,9 @@ export default {
     }
 
     return {
+      timeTracker: new TimeTrackerWorker(),
       randomizing: false,
+      isPlaying: false,
       turn: 0,
       ding,
       names,
@@ -288,9 +291,6 @@ export default {
     currentSpeaker () {
       return this.participants[this.turn - 1]
     },
-    isPlaying () {
-      return !!this.intervalId
-    },
     dailyIsOver () {
       return this.participants.every(p => p.isDone)
     },
@@ -305,14 +305,18 @@ export default {
       }
     }
   },
+  mounted () {
+    this.initTimeTracker()
+  },
   beforeMount () {
     window.addEventListener('keydown', this.handleKeypress)
   },
   destroyed () {
-    window.removeEventListener('keydown', this.handleKeypress)
-    if (this.intervalId) {
-      clearInterval(this.intervalId)
+    if (this.timeTracker instanceof Worker) {
+      this.timeTracker.terminate()
     }
+
+    window.removeEventListener('keydown', this.handleKeypress)
   },
   methods: {
     async randomize () {
@@ -341,26 +345,21 @@ export default {
       this.participants = []
     },
     start () {
-      if (this.dailyIsOver) { return }
       const speaker = this.currentSpeaker
-      if (!speaker) { return }
+      if (this.dailyIsOver || !speaker) { return this.pause() }
 
       speaker.previousSpeakTime = speaker.totalSpeakTime
-      speaker.speakStart = new Date()
-      this.intervalId = setInterval(() => { this.updateSpeakTime() }, 1000)
+
+      this.timeTracker.postMessage('start')
     },
     pause () {
-      clearInterval(this.intervalId)
-      this.intervalId = null
-      this.speakStart = null
-      this.isSpeaking = false
+      this.timeTracker.postMessage('pause')
     },
-    updateSpeakTime () {
+    updateSpeakTime (secondsElapsed) {
       const speaker = this.currentSpeaker
       if (!speaker) { return }
 
-      const msElapsed = Date.now() - speaker.speakStart.getTime()
-      speaker.totalSpeakTime = Math.floor(msElapsed / 1000) + speaker.previousSpeakTime
+      speaker.totalSpeakTime = secondsElapsed + speaker.previousSpeakTime
 
       if (!speaker.timeExceeded && speaker.totalSpeakTime >= this.secondsPerPerson) {
         speaker.timeExceeded = true
@@ -378,9 +377,13 @@ export default {
       }
       if (this.turn === n) { return }
 
-      this.pause()
       this.turn = n
-      this.start()
+
+      if (this.currentSpeaker?.isDone) {
+        this.pause()
+      } else {
+        this.start()
+      }
     },
     nextTurn () { this.setTurn(this.turn + 1) },
     prevTurn () { this.setTurn(this.turn - 1) },
@@ -399,6 +402,29 @@ export default {
 
       speaker.isDone = true
       this.nextSpeaker()
+    },
+    initTimeTracker () {
+      this.timeTracker.onmessage = (e) => {
+        const event = e?.data?.event
+
+        if (event === 'started') {
+          this.isPlaying = true
+          return
+        }
+
+        if (event === 'paused') {
+          this.isPlaying = false
+          return
+        }
+
+        if (event === 'update') {
+          const secondsElapsed = e?.data?.secondsElapsed
+
+          if (Number.isInteger(secondsElapsed)) {
+            this.updateSpeakTime(secondsElapsed)
+          }
+        }
+      }
     },
     handleKeypress (event) {
       if (!this.selectionIsOver) { return }
