@@ -85,7 +85,7 @@
       <v-divider />
 
       <v-card-title>
-        Tableau Trello (optionel)
+        Tableau Trello (optionnel)
       </v-card-title>
 
       <v-card-text>
