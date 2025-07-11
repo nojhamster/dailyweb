@@ -198,6 +198,56 @@
 
     <v-row>
       <v-col>
+        <v-list dense shaped two-line>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon color="primary">
+                mdi-timer
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="text-large-bold">15 minutes MAXIMUM pour toute l'équipe</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon color="primary">
+                mdi-timer
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="text-large-bold">Chaque membre décrit : La veille, aujourd'hui, blocages, avec qui disucter APRÈS le daily</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon color="warning">
+                mdi-block-helper
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="text-large-bold">Pas de débat technique, Pas de décisions</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon color="success">
+                mdi-target
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="text-large-bold">Reste centré sur les objectifs</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
         <TrelloViewer
           v-if="trelloBoardId"
           :board-id="trelloBoardId"
@@ -226,7 +276,31 @@ const leadExpressions = [
   'lance les hostilités',
   'a l\'avantage',
   'a la parole',
-  'fait le premier pas'
+  'fait le premier pas',
+  'a triché, ça ne devrait pas être lui',
+  'comme par hasard !',
+  'étrange coïncidence ...',
+  'commence, sois efficace',
+  'contrôle le début de daily',
+  'a perdu ! Il doit payer les croissants',
+  'est le leader !',
+  'démarre la partie',
+  'est le maître de ce début de daily',
+  'perd ses cheveux',
+  'lâche ce que tu fais, et commence',
+  'est le maestro !',
+  'ne veut pas commencer, mais il n\'a pas le choix',
+  'regrette de ne pas avoir préparé son daily',
+  'regrette de ne pas être dernier',
+  'est à l\'honneur',
+  'et pourquoi pas',
+  'enfin lui, ce n\'est pas trop tôt',
+  'ça fait beaucoup là non ?',
+  'pas de chance',
+  'encore lui ?',
+  'oh non pas lui ...',
+  'on est mal barré',
+  'c\'est la fin des haricots'
 ]
 
 export default {
@@ -312,6 +386,10 @@ export default {
     selectionIsOver (newVal) {
       if (newVal) {
         this.leadExpression = leadExpressions[Math.floor(Math.random() * leadExpressions.length)]
+        const hasLeo = this.participants.some(item => item.name === 'Léo')
+        if (hasLeo && this.firstSpeaker.name !== 'Léo' && Math.random() < 0.1) {
+          this.leadExpression = `${this.leadExpression} (ça aurait dû être Léo)`
+        }
       }
     }
   },
@@ -474,3 +552,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.compact-list-group .v-list-item {
+  min-height: 32px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.compact-list-group .v-list-item-title {
+  font-size: 32px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.text-large-bold {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+}
+</style>
