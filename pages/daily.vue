@@ -280,7 +280,7 @@ const leadExpressions = [
   'a triché, ça ne devrait pas être lui',
   'comme par hasard !',
   'étrange coïncidence ...',
-  'commence, soit efficace',
+  'commence, sois efficace',
   'contrôle le début de daily',
   'a perdu ! Il doit payer les croissants',
   'est le leader !',
