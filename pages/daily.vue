@@ -217,7 +217,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">Chaque membre décrit : La veille, aujourd'hui, blocages, avec qui disucter APRÈS le daily</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Chaque membre décrit : La veille, aujourd'hui, blocages, avec qui discuter APRÈS le daily</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
