@@ -206,7 +206,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">15 minutes MAXIMUM pour toute l'équipe</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Respectons le temps imparti à chacun pour assurer un Daily fluide et efficace</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -228,7 +228,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">Pas de débat technique, Pas de décisions</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Éviter les débats techniques et les prises de décisions</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -278,8 +278,8 @@ const leadExpressions = [
   'a la parole',
   'fait le premier pas',
   'a triché, mais on lui pardonne',
-  'comme par hasard !',
-  'étrange coïncidence ...',
+  ', comme par hasard !',
+  ', étrange coïncidence ...',
   'commence, sois efficace',
   'contrôle le début de daily',
   'a perdu ! Demain, croissants pour tout le monde',
@@ -292,14 +292,14 @@ const leadExpressions = [
   'regrette de ne pas avoir préparé son daily',
   'regrette de ne pas être dernier',
   'est à l\'honneur',
-  'et pourquoi pas',
+  ', et pourquoi pas',
   'enfin, ce n\'est pas trop tôt',
-  'ça fait beaucoup là non ?',
-  'pas de chance',
-  'encore ?',
-  'oh non pas toi ...',
-  'on est mal barré',
-  'c\'est la fin des haricots'
+  ', ça fait beaucoup là non ?',
+  ', pas de chance',
+  ', encore ?',
+  ', oh non pas toi ...',
+  ', on est mal barré',
+  ', c\'est la fin des haricots'
 ]
 
 export default {
