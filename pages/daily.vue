@@ -278,8 +278,8 @@ const leadExpressions = [
   'a la parole',
   'fait le premier pas',
   'a triché, mais on lui pardonne',
-  'comme par hasard !',
-  'étrange coïncidence ...',
+  ', comme par hasard !',
+  ', étrange coïncidence ...',
   'commence, sois efficace',
   'contrôle le début de daily',
   'a perdu ! Demain, croissants pour tout le monde',
@@ -292,14 +292,14 @@ const leadExpressions = [
   'regrette de ne pas avoir préparé son daily',
   'regrette de ne pas être dernier',
   'est à l\'honneur',
-  'et pourquoi pas',
+  ', et pourquoi pas',
   'enfin, ce n\'est pas trop tôt',
-  'ça fait beaucoup là non ?',
-  'pas de chance',
-  'encore ?',
-  'oh non pas toi ...',
-  'on est mal barré',
-  'c\'est la fin des haricots'
+  ', ça fait beaucoup là non ?',
+  ', pas de chance',
+  ', encore ?',
+  ', oh non pas toi ...',
+  ', on est mal barré',
+  ', c\'est la fin des haricots'
 ]
 
 export default {
