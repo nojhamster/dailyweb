@@ -206,7 +206,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">Respectons le temps imparti à chacun pour assurer un Daily fluide et efficace</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Respectons le temps imparti à chacun pour assurer un daily fluide et efficace</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -217,7 +217,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">Chaque membre décrit : La veille, aujourd'hui, blocages, avec qui discuter APRÈS le daily</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Chaque membre décrit : la veille, aujourd'hui, blocages, avec qui discuter APRÈS le daily</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -228,7 +228,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">Éviter les débats techniques et les prises de décisions</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Évitons les débats techniques et les prises de décisions</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -239,7 +239,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">Reste centré sur les objectifs</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Restons centrés sur les objectifs</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
