@@ -206,7 +206,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">15 minutes MAXIMUM pour toute l'équipe</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Respectons le temps imparti à chacun pour assurer un Daily fluide et efficace</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -228,7 +228,7 @@
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="text-large-bold">Pas de débat technique, Pas de décisions</v-list-item-title>
+              <v-list-item-title class="text-large-bold">Éviter les débats techniques et les prises de décisions</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
